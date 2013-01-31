@@ -30,6 +30,7 @@ from google.appengine.api import users
 
 import http
 from lib import forward
+from urllib import quote
 
 class Cache(db.Model):
     headers = db.ListProperty(str)
@@ -210,7 +211,7 @@ class Service(object):
         if not self.disableIfModifiedSince and cache:
             headers['If-Modified-Since'] = web.httpdate(cache.lastModified)
         try:
-            response = urlfetch.Fetch(url=url, headers=headers)
+            response = urlfetch.Fetch(url= quote(url.encode('utf8'), safe="%/:=&?~#+!$,;'@()*[]"), headers=headers)
         except Exception, e:
             if cache:
                 return cache
